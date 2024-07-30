@@ -1,4 +1,5 @@
 import axios from "axios"
+import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import { changeEmail,changePhoneNumber,changeregisterError,changeregisterErrorMessage,changeregisterPassword,changeregisterUsername,changeRole } from "../store/signSlice"
@@ -7,13 +8,14 @@ import { changeEmail,changePhoneNumber,changeregisterError,changeregisterErrorMe
 
 const Signup = () => {
    const dispatch = useDispatch();
-   const username = useSelector(state=>state.registerUsername)
-   const password = useSelector(state=>state.registerPassword)
-   const email = useSelector(state=>state.email)
-   const phoneNumber = useSelector(state=>state.phoneNumber )
-   const role = useSelector(state=>state.role );
-   const errorMessage = useSelector(state=>state.registerErrorMessage);
-   const error = useSelector(state=>state.registerError)
+   const username = useSelector(state=>state.RegisterReducer.registerUsername)
+   const password = useSelector(state=>state.RegisterReducer.registerPassword)
+   const email = useSelector(state=>state.RegisterReducer.email)
+   const phoneNumber = useSelector(state=>state.RegisterReducer.phoneNumber )
+   const role = useSelector(state=>state.RegisterReducer.role );
+   const errorMessage = useSelector(state=>state.RegisterReducer.registerErrorMessage);
+   const error = useSelector(state=>state.RegisterReducer.registerError)
+   const [showregisterPassword,setShowRegisterPassword] = useState(false)
    
    
 
@@ -59,6 +61,7 @@ const Signup = () => {
         id="username" />
         {error && !username.length ?<p className=" mt-0 text-danger">{errorMessage}</p>:null}
         
+        <div className="position-relative d-flex flex-column">
         <input 
         onChange={(e)=>dispatch(changeEmail(e.target.value))}
         value={email}
@@ -66,16 +69,27 @@ const Signup = () => {
         type="text" className=" my-2" 
         name="" 
         id="email" />
+        
+        </div>
         {error && !email.length ?<p className=" mt-0 text-danger">{errorMessage}</p>:null}
 
+        <div className=" position-relative d-flex flex-column">
         <input
          onChange={(e)=>dispatch(changeregisterPassword(e.target.value))}
          value={password}
          placeholder="Enter your Password" 
-         type="password" className=" 
+         type={showregisterPassword?"text":"password"} 
+         className=" 
          my-2" name="" 
          id="password" />
+         <i
+         onClick={()=>setShowRegisterPassword(prev=>!prev)} 
+        className={` position-absolute end-0 mt-3 mx-2  fa-regular ${showregisterPassword?'fa-eye-slash':'fa-eye'}`}></i>
+        
          {error && !password.length ?<p className=" mt-0 text-danger">{errorMessage}</p>:null}
+        </div>
+
+
         <input 
          onChange={(e)=>dispatch(changePhoneNumber(e.target.value))}
          value={phoneNumber}

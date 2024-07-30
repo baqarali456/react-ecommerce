@@ -1,9 +1,13 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
+import { useSelector } from "react-redux"
 
 
 const Navbar = () => {
-  const [loggedin,setLoggedin] = useState(false)
+  const user = useSelector(state=>state.RegisterReducer.loggedin)
+  const {role} = user
+  
+  
   return (
     <nav className="navbar navbar-expand-lg bg-light">
   <div className="container-fluid">
@@ -16,7 +20,10 @@ const Navbar = () => {
         <li className="nav-item">
           <Link className="nav-link active" aria-current="page" to="/">Home</Link>
         </li>
-        {loggedin && <li className="nav-item dropdown">
+        {role === "admin" && <li className="nav-item">
+          <Link className="nav-link active" aria-current="page" to="/dashboard">Dashboard</Link>
+        </li>}
+        {user.success && <li className="nav-item dropdown">
           <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Profile
           </a>
@@ -31,9 +38,9 @@ const Navbar = () => {
       <form className="d-flex" role="search">
         <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
         <button className="btn btn-outline-success" type="submit">Search</button>
-        <Link to="/cart" className=" mx-2 btn btn-primary">Cart</Link>
-        <Link to="/wishlist" className=" mx-2 btn btn-danger">Wishlist</Link>
-        <Link to="/login" className=" mx-2 btn btn-success">Login</Link>
+        {user.success && <Link to="/cart" className=" mx-2 btn btn-primary">Cart</Link>}
+        {user.success && <Link to="/wishlist" className=" mx-2 btn btn-danger">Wishlist</Link>}
+        {!user.success && <Link to="/login" className=" mx-2 btn btn-success">Login</Link>}
       </form>
     </div>
   </div>
